@@ -1,5 +1,9 @@
+// import 'bootstrap/dist/css/bootstrap.css';
+import $ from 'jquery';
+import Popper from 'popper.js';
 import React, { Component, useState, useEffect } from 'react';
 import Customer from "./Customer"
+
 
 // initialize a list  of customers
 
@@ -26,8 +30,6 @@ export default function CustomerService () {
     className="assordes"
     onClick= {props.toggler}
     >
-      
-
     </button>
   }
 
@@ -70,16 +72,19 @@ export default function CustomerService () {
    
   );
   
-  // const SorbyAttribute = props =>(
-  //   <button 
-  //     className="attribute" 
-  //     // style={{backgroundColor: colors[props.status]}}
-  //     onClick={() => {
-  //       props.onClick(props.customers, props.isAscending, props.sortbyfield)}}
-  //     >
-  //     {props.number}
-  //   </button>
-  // )
+ 
+
+  //To DO
+  //sort customers
+  /*
+  Expected combinations
+  Title assending/descending
+  Name assending/descending
+  Mobile assending/descending
+  Email assending/descending
+  Credit assending/descending
+  */
+  
   
   const toggleOrder=(o)=>{
     o?setOrder(false):setOrder(true);
@@ -105,37 +110,25 @@ export default function CustomerService () {
   }
   }
   
-  //To DO
-  //sort customers
-  /*
-  Expected combinations
-  Title assending/descending
-  Name assending/descending
-  Mobile assending/descending
-  Email assending/descending
-  Credit assending/descending
-  
-  
-  
-  
-  */
-  
-  
+
   
   //To Do
   // search customers
   
   
+
   // To Do
+  // highlight matched filters
+
+
+
+
+    // To Do
   // render customers
   /*
   Expected result
   Title| Name| Mobile|  Email
   */
-  
-  // To Do
-  // highlight matched fikters
-
   
   return(
     <div>
