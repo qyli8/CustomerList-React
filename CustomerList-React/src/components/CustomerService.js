@@ -10,118 +10,81 @@ import Customer from "./Customer"
 
 
 // create customer service list
-export default function CustomerService () {
-  const customerListData = [ new Customer("Mr", "John", "abc@john.com", "040370402", 536),
-  new Customer("Mr", "Chris", "abc@john.com", "040370102", 436),
-  new Customer("Mr", "Jason", "abc@john.com", "041171402", 936),
-  new Customer("Ms", "Lyn", "abc@john.com", "04037002", 366),
-  new Customer("Mrs", "Brown", "abc@john.com", "040370402", 236),
-  new Customer("Mrs", "Brown", "abc@john.com", "040370402", 1636)];
+export default class CustomerService extends React.Component {
 
-  const filterValues = ["Default","Title", "Name", "Email", "Mobile", "Credit"];
+  constructor(props){
+  //   const customerListData = [ new Customer("Mr", "John", "abc@john.com", "040370402", 536),
+  // new Customer("Mr", "Chris", "abc@john.com", "040370102", 436),
+  // new Customer("Mr", "Jason", "abc@john.com", "041171402", 936),
+  // new Customer("Ms", "Lyn", "abc@john.com", "04037002", 366),
+  // new Customer("Mrs", "Brown", "abc@john.com", "040370402", 236),
+  // new Customer("Mrs", "Brown", "abc@john.com", "040370402", 1636)];
+    super(props);
+    this.filterValues = ["Default","Title", "Name", "Email", "Mobile", "Credit"];
+    this.state={
+      "sortedCustomer":[ new Customer("Mr", "John", "abc@john.com", "040370402", 536),
+      new Customer("Mr", "Ben", "abc@john.com", "040370102", 436),
+      new Customer("Mr", "Sam", "abc@john.com", "041171402", 936),
+      new Customer("Ms", "Lyn", "abc@john.com", "04037002", 366),
+      new Customer("Mrs", "Brown", "abc@john.com", "040370402", 236)]
+    }
+    this.resetSortedCustomerList=this.resetSortedCustomerList.bind(this);
+    this.onClickFilter=this.onClickFilter.bind(this);
+    this.handleSearch=this.handleSearch.bind(this);
 
-  // const [customers, setCustomers] = useState(customerListData);
-  const [sortedCustomer, setSortedCustomer ] = useState(customerListData);
-  const  [activateFilter, setActivateFilter ]=useState(false);
-  const [order, setOrder]=useState(false)
-  
-  const orderOption = props=>{
-    <button
-    className="assordes"
-    onClick= {props.toggler}
-    >
-    </button>
   }
 
-  const Filter = props => (
-    <button 
-      className="filter" 
-      // style={{backgroundColor: colors[props.status]}}
-      onClick={
-        () => {
-          console.log(props.attr)
-          if(props.attr === "Default"){
-            setActivateFilter(false);
-            setSortedCustomer(props.sortList);
-          }
-          else{
-            setActivateFilter(true);
-            console.log(props.attr);
-            toggleOrder(order);
-            props.onClick(props.sortList, order, props.attr);
-    
-          }
-        }
-      }
-      >
-      {props.attr}
-    </button>
-  );
-
-
-  const CustomerRow = props =>(
-    props.list.map(customer =>
-      <tr>
-      <td>{customer.title}</td>
-      <td>{customer.name}</td>
-      <td>{customer.mobile}</td>
-      <td>{customer.email}</td>
-      <td>{customer.credit}</td>
-    </tr>
-    )
-   
-  );
-  
  
-
-  //To DO
-  //sort customers
-  /*
-  Expected combinations
-  Title assending/descending
-  Name assending/descending
-  Mobile assending/descending
-  Email assending/descending
-  Credit assending/descending
-  */
-  
-  
-  const toggleOrder=(o)=>{
-    o?setOrder(false):setOrder(true);
+  resetSortedCustomerList(){
+    this.setState({"sortedCustomer":[ new Customer("Mr", "John", "abc@john.com", "040370402", 536),
+    new Customer("Mr", "Ben", "abc@john.com", "040370102", 436),
+    new Customer("Mr", "Sam", "abc@john.com", "041171402", 936),
+    new Customer("Ms", "Lyn", "abc@john.com", "04037002", 366),
+    new Customer("Mrs", "Brown", "abc@john.com", "040370402", 236)]})
   }
-  const resetSortedCustomerList=() =>{
-    setSortedCustomer([])
-  }
-  const compare = (a, b) => {
+  compare(a, b) {
     if (isNaN(a) && typeof a === "string") return a.localeCompare(b);
     else if (!isNaN(a)) return a - b;
-  }; 
-  const onAttributeClick=(list, isAscending, sortbyfield)=>{
- 
+  };
+  
+  //order customers
+  onClickFilter(isAscending, sortbyfield){
+      this.setState(prevState=>{
         if (sortbyfield){
-      var attr = sortbyfield.toLowerCase(sortbyfield)
-      list.sort((a, b) => { 
-      return isAscending
-        ? compare(a[attr], b[attr])
-        : compare(b[attr], a[attr]);
-    });
-    setSortedCustomer(list)
-    console.log(list);
-  }
-  }
+          const attr = sortbyfield.toLowerCase(sortbyfield)
+          const sortedCustomer = prevState.sortedCustomer.sort((a, b) => { 
+          return isAscending
+            ? this.compare(a[attr], b[attr])
+            : this.compare(b[attr], a[attr]);
+        });
+        return({sortedCustomer})  
+        }
+         
+  })
+}
   
-
-  
-  //To Do
   // search customers
+  handleSearch (filterString){
+    this.setState((prevState)=>{
+      
+      console.log(filterString);
+      const sortedCustomer = prevState.sortedCustomer.filter(item=>{
+        for(var attri in item){
+          if(isNaN(item[attri])&& item[attri].toLowerCase().includes(filterString)){
+            return true
+          }
+          if(!isNaN(item[attri]) && typeof item[attri] === "string" && item[attri].includes(filterString)){
+            return true
+          }
+          if (item[attri] === filterString) return true
+        }
+      })
   
-  
+      return ({sortedCustomer})
+    })
+   
 
-  // To Do
-  // highlight matched filters
-
-
-
+  }
 
     // To Do
   // render customers
@@ -129,36 +92,136 @@ export default function CustomerService () {
   Expected result
   Title| Name| Mobile|  Email
   */
-  
-  return(
-    <div>
-      {
-        filterValues.map( f=> <Filter 
-          attr={f}
-          id={f}
-          onClick={onAttributeClick}
-          sortList={customerListData}
-          o={order}
-        
-        />)
-         
-      } 
-      <table>
-        <tr>
-          <td>TITLE</td>
-          <td>NAME</td>
-          <td>MOBILE</td>
-          <td>EMAIL</td>
-          <td>CREDIT</td>
-        </tr>
+  render(){
+    return(
+      <div>
+        <Search 
+          handleSearch={this.handleSearch}
+          reset={this.resetSortedCustomerList}
+
+        /> 
         {
-          <CustomerRow
-          list={sortedCustomer}     
-        />
+          this.filterValues.map( f=> <Filter 
+            attr={f}
+            id={f}
+            onClick={this.onClickFilter}
+            reset={this.resetSortedCustomerList}          
+          />)
+           
+        } 
+       
+        <table>
+          <tr>
+            <td>TITLE</td>
+            <td>NAME</td>
+            <td>MOBILE</td>
+            <td>EMAIL</td>
+            <td>CREDIT</td>
+          </tr>
+          {
+            <CustomerRow
+            list={this.state.sortedCustomer}     
+          />
+  
+          }
+        </table>
+      </div>
+    )  
+  }
+}
 
+class Filter extends React.Component {
+  constructor(props){
+    super(props)
+    this.state={
+      "order":false
+    }
+  }
+
+  toggleOrder(o){
+    this.setState((preveState)=>({"order":!preveState.order}));
+  }
+
+  render(){
+    return (
+      <button 
+      className="filter" 
+      // style={{backgroundColor: colors[props.status]}}
+      onClick={
+        () => {
+          console.log(this.props.attr)
+          if(this.props.attr === "Default"){
+            this.props.reset();
+          }
+          else{
+            console.log(this.props.attr);
+            this.toggleOrder(this.state.order);
+            this.props.onClick(this.state.order, this.props.attr);
+    
+          }
         }
-      </table>
-    </div>
-  )
+      }
+      >
+      {this.props.attr}
+      </button>
+      )
+  }
+}
+  
 
+
+const CustomerRow = props =>(
+  props.list.map(customer =>
+    <tr>
+    <td>{customer.title}</td>
+    <td>{customer.name}</td>
+    <td>{customer.mobile}</td>
+    <td>{customer.email}</td>
+    <td>{customer.credit}</td>
+  </tr>
+  )
+ 
+);
+
+
+// class Search extends React.Component{
+//   constructor(props){
+//     super(props)
+//     this.searchString=this.searchString.bind(this)
+//   }
+//    searchString (){
+//     console.log(filterString);
+//     const filterString = document.getElementById("searchvalue").value.trim();;
+//     console.log(filterString);
+//     this.props.handleSearch(filterString)
+//   }
+//   render (){
+//     return(
+
+//     <div >
+//       <input type="text" name="search" id="searchvalue"/>
+//       <button onClick={this.searchString}>search</button>   
+//       <button onClick={this.props.reset}>Show All</button>  
+//     </div>
+//     )
+//   }
+
+// }
+
+const Search = (props)=>{
+  const searchString= ()=> {
+    console.log(filterString);
+    const filterString = document.getElementById("searchvalue").value.trim();;
+    console.log(filterString);
+    props.handleSearch(filterString)
+    document.getElementById("searchvalue").value="";
+  }
+  return(
+
+    <div >
+      <input type="text" name="search" id="searchvalue"/>
+      <button onClick={searchString}>search</button>   
+      <button onClick={props.reset}>Show All</button>  
+    </div>
+    )
 }

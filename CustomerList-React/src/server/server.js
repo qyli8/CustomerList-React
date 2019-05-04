@@ -2,6 +2,7 @@ import express from '../../node_modules/express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server'
 import CustomerService from '../components/CustomerService'
+// import CustomerService from '../components/CustomerServiceOld'
 
 const server = express();
 server.use(express.static('dist'));
@@ -14,6 +15,7 @@ server.get('/', (req, res) => {
     <title>Sample React App</title>
   </head>
   <body>
+    <div id="appRoot"></div>
     <div id="mountNode">${initialMarkup}</div>
     <script src="/main.js"></script>
   </body>
